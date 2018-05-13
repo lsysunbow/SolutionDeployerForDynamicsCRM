@@ -347,6 +347,8 @@ namespace DeployTool
                     ClientCredentials prodcred = new ClientCredentials();
                     prodcred.UserName.UserName = prodDeployment.UserName;
                     prodcred.UserName.Password = prodDeployment.Password;
+
+                    //因生产环境可能组织的UrlName, orgUniqueName不一致，改为采用此种方式连接
                     OrganizationServiceProxy prodProxy = new OrganizationServiceProxy(new Uri(prodDeployment.OrganizationServiceAddress), null, prodcred, null);
                     if (prodProxy != null)
                     {

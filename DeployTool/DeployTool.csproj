@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>DeployTool</RootNamespace>
     <AssemblyName>DeployTool</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,9 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CRMServices.cs" />
-    <Compile Include="Configuration\DeploymentElement.cs" />
-    <Compile Include="Configuration\DeploymentCollection.cs" />
-    <Compile Include="Configuration\DeploymentSection.cs" />
     <Compile Include="Deploy.cs" />
     <Compile Include="Model\DeploySetting.cs" />
     <Compile Include="JSONTool.cs" />

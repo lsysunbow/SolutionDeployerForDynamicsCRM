@@ -43,19 +43,19 @@ namespace DeployTool
         internal  List<string> SolutionsToBeExport { get; set; }
 
         /// <summary>
-        /// 导出路径
+        /// 导出解决方案的路径，默认为桌面
         /// </summary>
         [DataMember(IsRequired = false)]
         internal  string ExportPath { get; set; }
 
         /// <summary>
-        /// 导入路径
+        /// 导入解决方案的路径，默认为桌面
         /// </summary>
         [DataMember(IsRequired = false)]
         internal  string ImportSourcePath { set; get; }
 
         /// <summary>
-        /// 是否需要更改工作流名称
+        /// 是否需要更改工作流名称,导出解决方案前更改工作流名称，由中文改为英文，因为Online环境同一使用英文
         /// </summary>
         [DataMember(IsRequired =false)]
         internal bool IsChangeWorkFlowName { get; set; }
