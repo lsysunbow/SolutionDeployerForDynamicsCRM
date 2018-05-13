@@ -1,18 +1,4 @@
-﻿using System;
-using System.ServiceModel;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
-using Microsoft.Xrm.Sdk.Query;
-using System.Data;
-using System.ServiceModel.Description;
-using System.Xml;
-using System.Text;
-using System.IO;
-using Microsoft.Crm.Sdk.Messages;
-using System.Configuration;
-
+﻿using System; 
 namespace DeployTool
 {
     public class Program
@@ -21,7 +7,7 @@ namespace DeployTool
         { 
             try
             {
-                Console.WriteLine("Confirm to deploy solutions(press y to deploy) ?");
+                Console.WriteLine("Do you Confirm to deploy?(press y to deploy) ");
                 string key = Console.ReadLine();
                 if (key == "y")
                 {  

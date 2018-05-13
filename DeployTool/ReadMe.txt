@@ -27,5 +27,6 @@
 2. 部署到测试环境连接环境查找组织服务时使用的是CRMServices.FindOrganization方法，根据组织的UrlName和配置文件里的 orgUniqueName作比较，如果您使用该程序时无法连接环境，请做相应的修改，或把连接方式改为使用new OrganizationServiceProxy的方式。
 3. 部署到生产环境时，配置文件项DestinationDeployments的Name属性必须是Production。
 4.本程序使用visual studio 2017来开发的，.NET Framework 版本最低为4.5.2。
+5. SolutionsToBeImport配置项的解决方案包将按顺序导入，请自行调整需要前置的解决方案。
 
 欢迎分享、提出修改意见

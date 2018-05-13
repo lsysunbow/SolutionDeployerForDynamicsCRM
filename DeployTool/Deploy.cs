@@ -34,7 +34,7 @@ namespace DeployTool
             DeploySetting deploy = new DeploySetting()
             {
                 DeployMode = DeployMode.Test,
-                IsChangeWorkFlowName = true,
+                //IsChangeWorkFlowName = true,
                 IsExportSolutions = true,
                 IsImportSolutions = false,
                 PublishAllCustomizationAfterImported = true,
@@ -53,13 +53,13 @@ namespace DeployTool
        
             Deployment sourceDeployment = new Deployment()
             {
-                UserName = "crmadminfortestenv@hwccp.onmicrosoft.com",
-                Password = "!QAZxsw2",
+                UserName = "@.onmicrosoft.com",
+                Password = "",
                 IsEnable = true,
                 DiscoveryServiceAddress = "https://disco.crm5.dynamics.com/XRMServices/2011/Discovery.svc",
-                OrganizationServiceAddress = "https://ccaredev1.api.crm5.dynamics.com/XRMServices/2011/Organization.svc",
-                OrganizationUniqueName = "ccaredev1",
-                Domain = "hwccp.com",
+                OrganizationServiceAddress = "https://.api.crm5.dynamics.com/XRMServices/2011/Organization.svc",
+                OrganizationUniqueName = "",
+                Domain = ".com",
                 Name = "Online_Dev1"
             };
 
@@ -68,37 +68,37 @@ namespace DeployTool
             deploy.DestinationDeployments = new List<Deployment>();
             Deployment productionDeployment = new Deployment()
             {
-                UserName = "crmadmin@hwccp.onmicrosoft.com",
+                UserName = "@.onmicrosoft.com",
                 Password = "",
                 IsEnable = true,
                 DiscoveryServiceAddress = "https://disco.crm.dynamics.com/XRMServices/2011/Discovery.svc",
-                OrganizationServiceAddress = "https://ccare.api.crm.dynamics.com/XRMServices/2011/Organization.svc",
-                OrganizationUniqueName = "ccare",
-                Domain = "hwccp.com",
+                OrganizationServiceAddress = "https://.api.crm.dynamics.com/XRMServices/2011/Organization.svc",
+                OrganizationUniqueName = "",
+                Domain = ".com",
                 Name = "Production",
             };
             deploy.DestinationDeployments.Add(productionDeployment);  
             Deployment sitDeployment = new Deployment()
             {
-                UserName = "crmadminfortestenv@hwccp.onmicrosoft.com",
-                Password = "!QAZxsw2",
+                UserName = "@.onmicrosoft.com",
+                Password = "",
                 IsEnable = true,
                 DiscoveryServiceAddress = "https://disco.crm5.dynamics.com/XRMServices/2011/Discovery.svc",
-                OrganizationServiceAddress = "https://ccaresit.api.crm5.dynamics.com/XRMServices/2011/Organization.svc",
-                OrganizationUniqueName = "ccaresit",
-                Domain = "hwccp.com",
+                OrganizationServiceAddress = "https://.api.crm5.dynamics.com/XRMServices/2011/Organization.svc",
+                OrganizationUniqueName = "",
+                Domain = ".com",
                 Name = "Online_SIT"
             };
             deploy.DestinationDeployments.Add(sitDeployment);
             Deployment uatDeployment = new Deployment()
             {
-                UserName = "crmadminfortestenv@hwccp.onmicrosoft.com",
-                Password = "!QAZxsw2",
+                UserName = "@.onmicrosoft.com",
+                Password = "",
                 IsEnable = true,
                 DiscoveryServiceAddress = "https://disco.crm5.dynamics.com/XRMServices/2011/Discovery.svc",
-                OrganizationServiceAddress = "https://ccareuat.api.crm5.dynamics.com/XRMServices/2011/Organization.svc",
-                OrganizationUniqueName = "ccareuat",
-                Domain = "hwccp.com",
+                OrganizationServiceAddress = "https://.api.crm5.dynamics.com/XRMServices/2011/Organization.svc",
+                OrganizationUniqueName = "",
+                Domain = ".com",
                 Name = "Online_UAT"
             };
             deploy.DestinationDeployments.Add(uatDeployment);
@@ -130,10 +130,10 @@ namespace DeployTool
        public void ExportSolution(OrganizationServiceProxy _serviceProxy)
         {
 
-            if (this.Settings.IsChangeWorkFlowName)
-            {
-                ChangeWorkflowName(_serviceProxy);
-            }
+            //if (this.Settings.IsChangeWorkFlowName)
+            //{
+            //    ChangeWorkflowName(_serviceProxy);
+            //}
 
             string hostName = _serviceProxy.ServiceManagement.CurrentServiceEndpoint.ListenUri.Host;
 
@@ -154,21 +154,22 @@ namespace DeployTool
                 qe.Criteria.AddCondition("uniquename", ConditionOperator.Equal, solution);
                 qe.TopCount = 1;
                 qe.NoLock = true;
-                EntityCollection solutions = _serviceProxy.RetrieveMultiple(qe);
-                if (solutions.Entities.Count > 0)
+                Entity entSolution = _serviceProxy.RetrieveMultiple(qe).Entities.FirstOrDefault();
+                if (entSolution!=null)
                 {
                     Console.WriteLine($"Export {solution} from {hostName} at {DateTime.Now.ToLongTimeString()}");
                     string monthDay = DateTime.Today.ToString("MMdd");
-                    solutions[0].Attributes["version"] = "8.2.4." + monthDay;
-                    _serviceProxy.Update(solutions[0]);
+                    string newVersion = entSolution.GetAttributeValue<string>("version") + monthDay;
+                    entSolution.Attributes["version"] = newVersion;
+                    _serviceProxy.Update(entSolution);
                     ExportSolutionRequest exportSolutionRequest = new ExportSolutionRequest();
                     exportSolutionRequest.Managed = false;
                     exportSolutionRequest.SolutionName = solution;
                     //exportSolutionRequest.TargetVersion = "8.2";
                     ExportSolutionResponse exportSolutionResponse = (ExportSolutionResponse)_serviceProxy.Execute(exportSolutionRequest);
                     byte[] exportXml = exportSolutionResponse.ExportSolutionFile;
-                    string solutionVersion = solutions.Entities[0].GetAttributeValue<string>("version");
-                    string filename = string.Format("{0}_{1}.zip", solution, solutionVersion.Replace('.', '_'));
+          
+                    string filename = string.Format("{0}_{1}.zip", solution, newVersion.Replace('.', '_'));
 
                     WriteSolutionFile(exportXml, filename);
                 }
@@ -351,10 +352,10 @@ namespace DeployTool
                     //因生产环境可能组织的UrlName, orgUniqueName不一致，改为采用此种方式连接
                     OrganizationServiceProxy prodProxy = new OrganizationServiceProxy(new Uri(prodDeployment.OrganizationServiceAddress), null, prodcred, null);
                     if (prodProxy != null)
-                    {
-                        if (this.Settings.IsChangeWorkFlowName) ChangeWorkflowName(prodProxy);
-
+                    { 
                         ImportSolution(prodProxy);
+                        //if (this.Settings.IsChangeWorkFlowName) ChangeWorkflowName(prodProxy);
+
                     }
                 }
             }); 
