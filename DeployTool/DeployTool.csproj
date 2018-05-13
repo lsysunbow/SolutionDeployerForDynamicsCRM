@@ -43,6 +43,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,14 +52,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CRMDataHandler.cs" />
+    <Compile Include="CRMServices.cs" />
+    <Compile Include="Configuration\DeploymentElement.cs" />
+    <Compile Include="Configuration\DeploymentCollection.cs" />
+    <Compile Include="Configuration\DeploymentSection.cs" />
+    <Compile Include="Deploy.cs" />
+    <Compile Include="Model\DeploySetting.cs" />
+    <Compile Include="JSONTool.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\Deployment.cs" />
+    <Compile Include="Model\SolutionModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

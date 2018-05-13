@@ -9,7 +9,7 @@ using Microsoft.Xrm.Sdk.Discovery;
 
 namespace DeployTool
 {
-    public abstract class CRMDataHandler
+    public abstract class CRMServices
     {
      
         #region Fields
@@ -271,20 +271,19 @@ namespace DeployTool
                     // Obtain information about the organizations that the system user belongs to.
                     OrganizationDetailCollection orgs = DiscoverOrganizations(discoveryProxy);
                     // Obtains the Web address (Uri) of the target organization.
-                    organizationUri = FindOrganization(_organizationUniqueName,
-                        orgs.ToArray()).Endpoints[EndpointType.OrganizationService];
+                   OrganizationDetail orgDetail =    FindOrganization(_organizationUniqueName, orgs.ToArray());
+                    if (orgDetail == null) return null;
+                    organizationUri = orgDetail .Endpoints[EndpointType.OrganizationService];
 
+                    if (!String.IsNullOrWhiteSpace(organizationUri))
+                    {
+                        IServiceManagement<IOrganizationService> orgServiceManagement =
+                            ServiceConfigurationFactory.CreateManagement<IOrganizationService>(new Uri(organizationUri)); 
+                        // Get the organization service proxy. 
+                        return GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement, authCredentials);
+                    }
                 }
-            }
-
-            if (!String.IsNullOrWhiteSpace(organizationUri))
-            {
-                IServiceManagement<IOrganizationService> orgServiceManagement =
-                    ServiceConfigurationFactory.CreateManagement<IOrganizationService>(new Uri(organizationUri));
-                 
-                // Get the organization service proxy. 
-                return GetProxy<IOrganizationService, OrganizationServiceProxy>(orgServiceManagement, authCredentials);
-            }
+            } 
             return null;
         }
         #endregion 
